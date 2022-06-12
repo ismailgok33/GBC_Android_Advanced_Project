@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">GBC-Android-Advanced-Project</string>
+
+    <string name="placeholder_organizer_detail">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
+    <string name="placeholder_date_detail">9/1/2022, 11:00 AM</string>
+    <string name="placeholder_location_name_detail">55 Progress Ave, Toronto, M1P 2Y7</string>
+    <string name="join_event_detail">Join Event</string>
+    <string name="leave_event_detail">Leave Event</string>
+</resources>

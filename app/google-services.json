@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "660945900184",
+    "project_id": "gbc-iosa-dvanced-project",
+    "storage_bucket": "gbc-iosa-dvanced-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660945900184:android:0dbc5195fadfd7426c76ed",
+        "android_client_info": {
+          "package_name": "com.example.gbc_android_advanced_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "660945900184-ob2ck0mj3t84i2bmb88hbu15duq3l3sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSXwY8d4ox22TT3gNDmKyDpxgjeEcJLoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "660945900184-ob2ck0mj3t84i2bmb88hbu15duq3l3sm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "660945900184-64prva97bvn4lk689mgus7vqluh199h9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.github.ismailgok33.iOSAdvancedProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
