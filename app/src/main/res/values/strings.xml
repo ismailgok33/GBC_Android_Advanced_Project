@@ -7,4 +7,10 @@
     <string name="join_event_detail">Join Event</string>
     <string name="leave_event_detail">Leave Event</string>
 
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_firstname">First Name</string>
+    <string name="hint_lastname">Last Name</string>
+    <string name="btn_signup">Signup</string>
+
 </resources>

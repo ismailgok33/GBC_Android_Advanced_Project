@@ -6,25 +6,49 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 
 public class User implements Parcelable {
-    private String id;
+    private String uid;
     private String email;
+    private String firstName;
+    private String lastName;
     private ArrayList<String> joinedEvents;
 
     public User() {}
 
-    public User(String email) {
+    public User(String email, String firstName, String lastName) {
         this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         joinedEvents = new ArrayList<>();
     }
 
-    public User(String email, ArrayList<String> joinedEvents) {
+    public User(String uid, String email, String firstName, String lastName) {
+        this.uid = uid;
         this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        joinedEvents = new ArrayList<>();
+    }
+
+    public User(String email, String firstName, String lastName, ArrayList<String> joinedEvents) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.joinedEvents = joinedEvents;
+    }
+
+    public User(String uid, String email, String firstName, String lastName, ArrayList<String> joinedEvents) {
+        this.uid = uid;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.joinedEvents = joinedEvents;
     }
 
     protected User(Parcel in) {
-        id = in.readString();
+        uid = in.readString();
         email = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
         joinedEvents = in.readArrayList(String.class.getClassLoader());
     }
 
@@ -41,11 +65,11 @@ public class User implements Parcelable {
     };
 
     public String getId() {
-        return id;
+        return uid;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.uid = id;
     }
 
     public String getEmail() {
@@ -64,11 +88,29 @@ public class User implements Parcelable {
         this.joinedEvents = joinedEvents;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "uid='" + uid + '\'' +
                 ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", joinedEvents=" + joinedEvents +
                 '}';
     }
@@ -80,8 +122,10 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeString(uid);
         dest.writeString(email);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
         dest.writeList(joinedEvents);
     }
 

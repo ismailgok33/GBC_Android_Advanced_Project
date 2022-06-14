@@ -86,6 +86,12 @@ public class EventRepository {
                             joinedEvents.removeAll(joinedEvents);
                             joinedEvents.addAll(user.getJoinedEvents());
 
+                            // check if joinedEvents is empty for the current user
+                            if (user.getJoinedEvents() == null || user.getJoinedEvents().size() == 0) {
+                                joinedEventsContainer.setValue(eventArrayList);
+                                return;
+                            }
+
                             // Fetch the joined events for the current user
                             for (String eventID : joinedEvents) {
                                 DB.collection(COLLECTION_EVENTS)

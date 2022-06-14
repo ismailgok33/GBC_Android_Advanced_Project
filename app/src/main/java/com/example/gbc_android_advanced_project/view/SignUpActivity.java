@@ -25,7 +25,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private ActivitySignUpBinding binding;
 
     private FirebaseAuth mAuth;
-    private FirebaseFirestore firebaseFirestore;
     private UserViewModel userViewModel;
 
     @Override
@@ -35,7 +34,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(this.binding.getRoot());
 
         this.binding.btnSignUp.setOnClickListener(this);
-//        this.userViewModel = userViewModel.getInstance(this.getApplication());
+        this.userViewModel = userViewModel.getInstance(this.getApplication());
         this.mAuth = FirebaseAuth.getInstance();
     }
 
@@ -57,6 +56,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         Boolean validData = true;
         String email = "";
         String password = "";
+        String firstName = "";
+        String lastName = "";
 
         if (this.binding.email.getText().toString().isEmpty()){
             this.binding.email.setError("Email Cannot be Empty");
@@ -72,23 +73,24 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             password = this.binding.password.getText().toString();
         }
 
+        firstName = this.binding.etFirstname.getText().toString();
+        lastName = this.binding.etLastname.getText().toString();
+
         if (validData){
-            this.singUp(email, password);
+            this.singUp(email, password, firstName, lastName);
         }else{
             Toast.makeText(this, "Please provide correct inputs", Toast.LENGTH_SHORT).show();
         }
     }
-    private void singUp(String email, String password){
-        Log.d(":ABC","XYz");
+    private void singUp(String email, String password, String firstName, String lastName){
+
         this.mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     Log.e(TAG, "onComplete: Sign In Successful");
                     String uid = mAuth.getCurrentUser().getUid();
-                    // DocumentReference documentReference = firebaseFirestore.collection("users").document(uid);
-                    // viewmodel.addUser(new users(email,password,uid));
-                    User newUser = new User(email);
+                    User newUser = new User(uid, email, firstName, lastName);
                     userViewModel.addUser(newUser);
                     goToMain();
                 }else{

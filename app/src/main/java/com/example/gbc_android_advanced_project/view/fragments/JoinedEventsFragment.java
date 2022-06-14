@@ -66,16 +66,13 @@ public class JoinedEventsFragment extends Fragment {
         this.eventViewModel.joinedEventsContainer.observe(getViewLifecycleOwner(), new Observer<List<Event>>() {
             @Override
             public void onChanged(List<Event> events) {
-                if (events.isEmpty()){
-                    Log.e(TAG, "onChanged: No documents received");
-                }else{
-                    for(Event event : events){
-                        Log.d(TAG, "onChanged: event : " + event.toString() );
-                    }
-                    eventArrayList.clear();
-                    eventArrayList.addAll(events);
-                    adapter.notifyDataSetChanged();
+                for (Event event : events) {
+                    Log.d(TAG, "onChanged: event : " + event.toString());
                 }
+                eventArrayList.clear();
+                eventArrayList.addAll(events);
+                adapter.notifyDataSetChanged();
+
             }
         });
     }
