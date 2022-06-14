@@ -38,6 +38,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         this.mAuth = FirebaseAuth.getInstance();
         this.userViewModel = UserViewModel.getInstance(this.getApplication());
+
+        if (this.mAuth.getCurrentUser() != null) {
+            Log.d(TAG, "onCreate: current user id = " + this.mAuth.getCurrentUser().getUid());
+            goToMain();
+        }
     }
 
     @Override
@@ -46,7 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             switch (view.getId()){
                 case R.id.signIn:
                 {
-                    this.singIn();
+                    this.goToSignup();
                     break;
                 }
                 case R.id.btnLogin:
@@ -58,10 +63,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
-    private void singIn()
+    private void goToSignup()
     {
-        Log.d(TAG,"ABc");
         Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToMain()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

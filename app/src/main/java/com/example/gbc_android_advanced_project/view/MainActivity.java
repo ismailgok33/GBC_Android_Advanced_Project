@@ -1,20 +1,31 @@
 package com.example.gbc_android_advanced_project.view;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.gbc_android_advanced_project.R;
 import com.example.gbc_android_advanced_project.databinding.ActivityMainBinding;
 import com.example.gbc_android_advanced_project.models.Event;
+import com.example.gbc_android_advanced_project.view.fragments.AllEventsFragment;
+import com.example.gbc_android_advanced_project.view.fragments.JoinedEventsFragment;
 import com.example.gbc_android_advanced_project.viewmodels.EventViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
@@ -25,21 +36,31 @@ public class MainActivity extends AppCompatActivity {
         this.binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(this.binding.getRoot());
 
-        this.binding.btnGoToEventDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Event event = new Event("Test Event",
-                        "This is a test event and this is its description",
-                        "Organizer name and other descriptions about it",
-                        43.661305213236865,
-                        -79.43067294897202,
-                        "https://picsum.photos/200",
-                        new Timestamp(new Date()));
+        // setup the bottom navigation menu
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        BottomNavigationView bottomNav = binding.bottomView;
+        NavigationUI.setupWithNavController(bottomNav, navController);
 
-                Intent intent = new Intent(MainActivity.this, EventDetailsActivity.class);
-                intent.putExtra("event_detail", event);
-                startActivity(intent);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_logout, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_logout:{
+                FirebaseAuth.getInstance().signOut();
+                finish();
+                break;
             }
-        });
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

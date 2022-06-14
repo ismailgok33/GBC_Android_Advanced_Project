@@ -27,4 +27,12 @@ public class UserViewModel extends AndroidViewModel {
         this.repository.addUser(user);
     }
 
+    public void joinEvent(String eventID) {
+        this.repository.joinEvent(eventID);
+    }
+
+    public void leaveEvent(String eventID) {
+        this.repository.leaveEvent(eventID);
+    }
+
 }

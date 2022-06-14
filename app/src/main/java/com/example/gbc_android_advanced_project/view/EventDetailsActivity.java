@@ -3,21 +3,31 @@ package com.example.gbc_android_advanced_project.view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.example.gbc_android_advanced_project.R;
 import com.example.gbc_android_advanced_project.databinding.ActivityEventDetailsBinding;
 import com.example.gbc_android_advanced_project.models.Event;
 import com.example.gbc_android_advanced_project.viewmodels.EventViewModel;
+import com.example.gbc_android_advanced_project.viewmodels.UserViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,10 +36,12 @@ import java.util.Locale;
 public class EventDetailsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "EventDetailsActivity";
+    private final String STORAGE_IMAGES = "event_images";
     private ActivityEventDetailsBinding binding;
 
     private Event currentEvent;
     private EventViewModel eventViewModel;
+    private UserViewModel userViewModel;
 
     private MapView mMapView;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -41,13 +53,11 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
         setContentView(this.binding.getRoot());
 
         this.eventViewModel = EventViewModel.getInstance(this.getApplication());
+        this.userViewModel = UserViewModel.getInstance(this.getApplication());
 
         this.currentEvent = this.getIntent().getParcelableExtra("event_detail");
         Log.d(TAG, "setUIElements: currentEvent = " + currentEvent.toString());
 
-        // *** IMPORTANT ***
-        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
-        // objects or sub-Bundles.
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
@@ -62,12 +72,34 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 
     private void setUIElements() {
         // Load Image from URL
-        Glide.with(this).load(currentEvent.getImageURL()).into(this.binding.ivEventDetail);
+        // get image downloadURL from Firebase Storage
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imagesRef = storageRef.child(STORAGE_IMAGES + "/" + currentEvent.getImageURL());
+        imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d(TAG, "onSuccess: downloadURL = " + uri);
+                Glide.with(EventDetailsActivity.this).load(uri).into(binding.ivEventDetail);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "onFailure: failed to get the downloadURL from Firebase Storage = " + e.getLocalizedMessage());
+            }
+        });
 
         // Set Description
         this.binding.tvOrganizerDetail.setText(currentEvent.getDescription());
         this.binding.tvDateDetails.setText(currentEvent.getTimestamp().toDate().toString());
         this.binding.tvLocationNameDetails.setText(geoEncoder(currentEvent.getLat(), currentEvent.getLng()));
+
+        this.setInitialButtonStyle();
+        this.binding.btnJoinEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleEventButtonStyle();
+            }
+        });
 
     }
 
@@ -96,6 +128,39 @@ public class EventDetailsActivity extends AppCompatActivity implements OnMapRead
 //        map.setMaxZoomPreference(20f);
 //        map.setMaxZoomPreference(15f);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+    }
+
+    private void toggleEventButtonStyle() {
+        if (this.binding.btnJoinEvent.getText().equals(getString(R.string.join_event_detail))) {
+
+            // leave event first
+            this.userViewModel.joinEvent(currentEvent.getId());
+
+            // set button style accordingly
+            this.binding.btnJoinEvent.setText(getString(R.string.leave_event_detail));
+            this.binding.btnJoinEvent.setBackgroundColor(getColor(R.color.leave_event_color));
+        }
+        else {
+            // join event first
+            this.userViewModel.leaveEvent(currentEvent.getId());
+
+            // set button style accordingly
+            this.binding.btnJoinEvent.setText(getString(R.string.join_event_detail));
+            this.binding.btnJoinEvent.setBackgroundColor(getColor(R.color.join_event_color));
+        }
+    }
+
+    private void setInitialButtonStyle() {
+        String currentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if (this.currentEvent.getJoinedUsers().stream().anyMatch(userID -> userID.equalsIgnoreCase(currentUserID))) {
+            this.binding.btnJoinEvent.setText(getString(R.string.leave_event_detail));
+            this.binding.btnJoinEvent.setBackgroundColor(getColor(R.color.leave_event_color));
+        }
+        else {
+            this.binding.btnJoinEvent.setText(getString(R.string.join_event_detail));
+            this.binding.btnJoinEvent.setBackgroundColor(getColor(R.color.join_event_color));
+        }
     }
 
     @Override

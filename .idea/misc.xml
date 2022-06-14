@@ -3,10 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_events.xml" value="0.237" />
+        <entry key="app/src/main/res/drawable/ic_join.xml" value="0.237" />
         <entry key="app/src/main/res/layout/activity_event_details.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.33177083333333335" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.3177083333333333" />
+        <entry key="app/src/main/res/layout/custom_row_layout.xml" value="0.3307291666666667" />
+        <entry key="app/src/main/res/layout/fragment_all_events.xml" value="0.3177083333333333" />
+        <entry key="app/src/main/res/layout/fragment_joined_events.xml" value="0.33177083333333335" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.3151041666666667" />
+        <entry key="app/src/main/res/menu/menu_logout.xml" value="0.3307291666666667" />
       </map>
     </option>
   </component>
